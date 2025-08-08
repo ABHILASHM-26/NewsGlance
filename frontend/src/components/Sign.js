@@ -15,11 +15,10 @@ const SignIn = ({ setUser }) => {
   const handleRegisterSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5005/api/auth/register', {
-        email,
-        name,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/register`,
+        { email, name, password }
+      );
 
       if (response && response.data) {
         alert('Registration successful! Please log in.');
@@ -37,10 +36,10 @@ const SignIn = ({ setUser }) => {
   const handleLoginSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5005/api/auth/login', {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/login`,
+        { email, password }
+      );
 
       if (response && response.data) {
         const { token, userName } = response.data;

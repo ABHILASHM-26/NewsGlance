@@ -12,7 +12,7 @@ const News = ({ searchQuery }) => {
   useEffect(() => {
     const fetchAllNews = async () => {
       try {
-        const mongoRes = await axios.get('http://localhost:5005/api/articles/getall');
+        const mongoRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/articles/getall`);
         const mongoArticles = mongoRes.data.map(article => ({
           title: article.title || 'No Title',
           description: article.description || 'No Description',
@@ -20,7 +20,7 @@ const News = ({ searchQuery }) => {
           link: article.link || '#',
         }));
 
-        const newsApiRes = await axios.get('http://localhost:5005/api/articles/newsapi');
+        const newsApiRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/articles/newsapi`);
         const apiArticles = (newsApiRes.data || []).map(article => ({
           title: article.title || 'No Title',
           description: article.description || 'No Description',
