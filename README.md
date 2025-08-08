@@ -52,19 +52,19 @@ NewsGlance/
 
 cd backend
 npm install
-# Create .env file and add:
-# MONGO_URI=your_mongo_uri
-# PORT=5005
-# JWT_SECRET=your_secret
-# NEWS_API_KEY=your_api_key
+ Create .env file and add:
+ MONGO_URI=your_mongo_uri
+ PORT=5005
+ JWT_SECRET=your_secret
+ NEWS_API_KEY=your_api_key
 npm start
 
 ### Frontend Setup
 
 cd frontend
 npm install
-# Create .env file and add:
-# REACT_APP_API_URL=http://localhost:5005 (for local machine setup)
+Create .env file and add:
+REACT_APP_API_URL=http://localhost:5005 (for local machine setup)
 npm start
 
 ## Contact
