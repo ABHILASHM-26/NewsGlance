@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import '../sign.css';
+import '../App.css';
 
 const SignIn = ({ setUser }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [isRegister, setIsRegister] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleRegisterSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
+      const response = await axios.post('http://localhost:5005/api/auth/register', {
         email,
         name,
         password,
@@ -22,6 +26,7 @@ const SignIn = ({ setUser }) => {
         setName("");
         setEmail("");
         setPassword("");
+        setIsRegister(false);
       }
     } catch (error) {
       console.error('Error during registration:', error);
@@ -31,9 +36,8 @@ const SignIn = ({ setUser }) => {
 
   const handleLoginSubmit = async (event) => {
     event.preventDefault();
-
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post('http://localhost:5005/api/auth/login', {
         email,
         password,
       });
@@ -41,8 +45,10 @@ const SignIn = ({ setUser }) => {
       if (response && response.data) {
         const { token, userName } = response.data;
         localStorage.setItem('authToken', token);
-        alert(`Welcome, ${userName}`);
-        setUser(userName); // Update the user state in App.js
+        localStorage.setItem('userName', userName);
+        localStorage.setItem('email', email);
+        setUser(userName);
+        navigate('/');
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -51,67 +57,70 @@ const SignIn = ({ setUser }) => {
   };
 
   return (
-    <>
-    <header className='Sign-header'><h1>NEWS APPLICATION</h1></header>
-    <div className="main">
-      <input type="checkbox" id="chk" aria-hidden="true" />
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <h2 className="text-center mb-4">NewsGlance</h2>
 
-      <div className="signup">
-        <form onSubmit={handleRegisterSubmit}>
-          <label htmlFor="chk" aria-hidden="true">Register</label>
-          <input
-            className='Sign-input'
-            type="text"
-            placeholder="Enter your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <input
-            className='Sign-input'
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            className='Sign-input'
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button className='Sign-button'>Register</button>
-        </form>
-      </div>
-
-      <div className="login">
-        <form onSubmit={handleLoginSubmit}>
-          <label htmlFor="chk" aria-hidden="true">Login</label>
-          <input
-            className='Sign-input'
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            className='Sign-input'
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {error && <p style={{ color: 'red', margin: '10px 0' }}>{error}</p>}
-          <button className='Sign-button'>Login</button>
-        </form>
+        {isRegister ? (
+          <form onSubmit={handleRegisterSubmit}>
+            <label className="form-title">Register</label>
+            <input
+              className='Sign-input'
+              type="text"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <input
+              className='Sign-input'
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              className='Sign-input'
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button className='Sign-button'>Register</button>
+            <p className="toggle-link">
+              Already have an account? <span onClick={() => setIsRegister(false)}>Login here</span>
+            </p>
+          </form>
+        ) : (
+          <form onSubmit={handleLoginSubmit}>
+            <label className="form-title">Login</label>
+            <input
+              className='Sign-input'
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              className='Sign-input'
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            {error && <p className="error-text">{error}</p>}
+            <button className='Sign-button'>Login</button>
+            <p className="toggle-link">
+              Don’t have an account? <span onClick={() => setIsRegister(true)}>Register here</span>
+            </p>
+          </form>
+        )}
       </div>
     </div>
-    </>
   );
 };
 

@@ -8,13 +8,19 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// ✅ Apply CORS before routes
+app.use(cors({
+  origin: 'http://localhost:3000',  // frontend origin
+  credentials: true
+}));
+
 app.use(express.json());
+
 mongoose.connect(process.env.MONGO_URI, {})
   .then(() => console.log('MongoDB connected successfully'))
   .catch(error => console.log('Error connecting to MongoDB:', error));
 
-// Root Route - To Fix "Cannot GET /" Error
 app.get('/', (req, res) => {
   res.send('Welcome to the News Application API');
 });

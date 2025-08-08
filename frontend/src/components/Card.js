@@ -1,31 +1,43 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../App.css';
 
 const Card = ({ title, text, imageUrl, link }) => {
-    const navigate = useNavigate();
-  
-    const handleClick = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (typeof link === 'string') {
       if (link.startsWith('http') || link.startsWith('www')) {
-        // Open external links in a new tab
         window.open(link, '_blank', 'noopener,noreferrer');
       } else {
-        // Navigate to internal routes
         navigate(link);
       }
-    };
-  
-    return (
-      <div
-        onClick={handleClick}
-        className="bg-white rounded-lg shadow-md overflow-hidden transform transition hover:scale-95 cursor-pointer"
-      >
-        <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
-        <div className="p-4">
-          <h5 className="text-xl font-semibold mb-2">{title}</h5>
-          <p className="text-gray-600 line-clamp-3">{text}</p>
-        </div>
-      </div>
-    );
+    } else {
+      console.warn('Invalid or missing link:', link);
+    }
   };
-  
-  export default Card;
+
+  return (
+    <div className="card" onClick={handleClick}>
+      <img
+        src={imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'}
+        alt={title || 'News Image'}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+        }}
+      />
+      <div className="p-4 flex flex-col flex-1">
+        <h5 className="text-lg font-semibold mb-1 text-gray-800 line-clamp-2">
+          {title || 'Untitled Article'}
+        </h5>
+        <p className="text-sm text-gray-600 line-clamp-3 flex-grow">
+          {text || 'No description available.'}
+        </p>
+        <div className="read-more">Read more</div>
+      </div>
+    </div>
+  );
+};
+
+export default Card;

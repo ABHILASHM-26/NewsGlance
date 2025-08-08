@@ -2,26 +2,50 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import Card from './Card';
+import '../App.css';
 
-const News = () => {
-  const [articles, setArticles] = useState([]);
+const News = ({ searchQuery }) => {
+  const [allArticles, setAllArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchArticles = async () => {
+    const fetchAllNews = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/articles/getall');
-        setArticles(response.data);
+        const mongoRes = await axios.get('http://localhost:5005/api/articles/getall');
+        const mongoArticles = mongoRes.data.map(article => ({
+          title: article.title || 'No Title',
+          description: article.description || 'No Description',
+          imageUrl: article.imageUrl?.startsWith('http') ? article.imageUrl : 'https://picsum.photos/300/200?grayscale',
+          link: article.link || '#',
+        }));
+
+        const newsApiRes = await axios.get('http://localhost:5005/api/articles/newsapi');
+        const apiArticles = (newsApiRes.data || []).map(article => ({
+          title: article.title || 'No Title',
+          description: article.description || 'No Description',
+          imageUrl: article.urlToImage || 'https://via.placeholder.com/300x200?text=No+Image',
+          link: article.url || '#',
+        }));
+
+        setAllArticles([...mongoArticles, ...apiArticles]);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch articles');
+        console.error('News fetch error:', err.message);
+        setError('Failed to fetch news');
         setLoading(false);
       }
     };
 
-    fetchArticles();
+    fetchAllNews();
   }, []);
+
+  const filteredArticles = searchQuery
+    ? allArticles.filter(article =>
+        (article?.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (article?.description || '').toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : allArticles;
 
   if (loading) {
     return (
@@ -43,20 +67,21 @@ const News = () => {
 
   return (
     <div className="px-4 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full">
-        {articles.map((article) => (
+      <div className="card-grid">
+        {filteredArticles.map((article, index) => (
           <Card
-            key={article._id}
-            title={article.heading}
+            key={index}
+            title={article.title}
             text={article.description}
-            imageUrl={article.image}
+            imageUrl={article.imageUrl}
             link={article.link}
           />
         ))}
       </div>
-      {articles.length === 0 && (
+
+      {filteredArticles.length === 0 && (
         <div className="text-center text-gray-500 py-8">
-          <p>No articles found</p>
+          <p>No articles found matching "{searchQuery}"</p>
         </div>
       )}
     </div>

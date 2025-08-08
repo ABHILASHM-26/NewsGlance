@@ -1,28 +1,26 @@
 const Article = require("../models/Article");
 
-// Create a new article
 const createArticle = async (req, res) => {
   try {
-    const { heading, image, description, link } = req.body;
-    const newArticle = new Article({ heading, image, description, link });
-    await newArticle.save();
-    res.status(201).json({ message: "Article created successfully", article: newArticle });
+    const article = new Article(req.body);
+    const saved = await article.save();
+    res.status(201).json(saved);
   } catch (error) {
-    res.status(500).json({ message: "Error creating article", error: error.message });
+    res.status(500).json({ message: 'Failed to add article', error });
   }
 };
 
-// Get all articles
+
 const getAllArticles = async (req, res) => {
   try {
-    const articles = await Article.find();
-    res.status(200).json(articles);
+    const articles = await Article.find().sort({ publishedAt: -1 });
+    res.json(articles);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching articles", error: error.message });
+    res.status(500).json({ message: 'Error fetching articles', error });
   }
 };
 
-// Get a single article by ID
+
 const getArticleById = async (req, res) => {
   try {
     const article = await Article.findById(req.params.id);
@@ -35,7 +33,6 @@ const getArticleById = async (req, res) => {
   }
 };
 
-// Update an article by ID
 const updateArticle = async (req, res) => {
   try {
     const { heading, image, description, date, time } = req.body;
@@ -53,7 +50,6 @@ const updateArticle = async (req, res) => {
   }
 };
 
-// Delete an article by ID
 const deleteArticle = async (req, res) => {
   try {
     const deletedArticle = await Article.findByIdAndDelete(req.params.id);
