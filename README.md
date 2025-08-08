@@ -21,7 +21,7 @@
 | Frontend      | Backend         | Database        |
 | ------------- | --------------- | --------------- |
 | React.js      | Node.js, Express| MongoDB Atlas   |
-| Bootstrap 5   | RESTful API     | Mongoose ORM    |
+| Node.js , CSS | RESTful API     | Mongoose ORM    |
 
 ## Folder Structure
 
