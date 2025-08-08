@@ -2,7 +2,7 @@
 
 **NewsGlance** is a MERN full-stack news application that allows users to browse the latest headlines, report their own articles, and manage their profile.
 
-## Live Demo
+## Live 
 
 - Frontend: [https://newsglance-frontend.onrender.com](https://newsglance-frontend.onrender.com)
 - Backend: [https://newsglance-backend.onrender.com](https://newsglance-backend.onrender.com)
@@ -80,3 +80,4 @@ If you have any questions, suggestions, or would like to collaborate, feel free 
 - **LinkedIn**: [https://www.linkedin.com/in/Abhilash M](https://www.linkedin.com/in/abhilashmellacheruvu/)
 
 - **GitHub**: [github.com/ABHILASHM-26](https://github.com/ABHILASM-26)
+    I Am open to feedback for you.
